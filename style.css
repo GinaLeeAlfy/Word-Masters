@@ -1,6 +1,7 @@
 body {
   display: flex;
   justify-content: center;
+  font-size: 48px;
 }
 
 #page {
@@ -9,4 +10,42 @@ body {
   justify-content: center;
   align-items: center;
   height: 100lvh;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  margin-bottom: 0;
+}
+
+h2 {
+  font-size: 46px;
+  margin-top: 0;
+}
+
+#guesses {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 500px;
+}
+
+form {
+  display: flex;
+  justify-content: space-evenly;
+  width: 500px;
+}
+
+input {
+  border: 5px solid gray;
+  width: 50px;
+  height: 50px;
+  font-size: xx-large;
+  text-align: center;
+  font-weight: bolder;
 }
