@@ -3,13 +3,14 @@ function isLetter(letter) {
 }
 
 let baseTextInput = document.querySelectorAll(".base-tester-input");
-let finalTextInput = document.querySelectorAll(".final-tester-input");
+let finalTextInput = document.querySelectorAll(".base-tester-input");
 
 for (let i = 0; i < baseTextInput.length; i++) {
   const element = baseTextInput[i];
   element.addEventListener("keydown", function (event) {
-    console.log(event.key);
-    if (!isLetter(event.key) && event.key != "Backspace") {
+    if (event.key == "Backspace") {
+      return;
+    } else if (!isLetter(event.key)) {
       event.preventDefault();
     }
   });
@@ -18,12 +19,11 @@ for (let i = 0; i < baseTextInput.length; i++) {
 for (let i = 0; i < finalTextInput.length; i++) {
   const element = finalTextInput[i];
   element.addEventListener("keydown", function (event) {
-    console.log(event.key);
-    if (
-      !isLetter(event.key) &&
-      event.key != "Backspace" &&
-      event.key != "Enter"
-    ) {
+    if (event.key == "Backspace") {
+      return;
+    } else if (event.key == "Enter") {
+      return;
+    } else if (!isLetter(event.key)) {
       event.preventDefault();
     }
   });
