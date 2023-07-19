@@ -10,36 +10,66 @@ function focusNext() {
   input.focus();
 }
 
-let inputs = Array.prototype.slice.call(document.querySelectorAll("input"));
-let baseTextInput = document.querySelectorAll(".base-tester-input");
-let finalTextInput = document.querySelectorAll(".final-tester-input");
+function focusBack() {
+  const currInput = document.activeElement;
+  const currInputIndex = inputs.indexOf(currInput);
+  const nextInputIndex = (currInputIndex - 1) % inputs.length;
+  const input = inputs[nextInputIndex];
+  input.focus();
+}
 
-for (let i = 0; i < baseTextInput.length; i++) {
-  const element = baseTextInput[i];
-  element.addEventListener("keydown", function (event) {
-    if (event.key == "Backspace") {
+let inputs = Array.prototype.slice.call(document.querySelectorAll("input"));
+let startTextInput = Array.prototype.slice.call(
+  document.querySelectorAll(".start-tester-input")
+);
+let baseTextInput = Array.prototype.slice.call(
+  document.querySelectorAll(".base-tester-input")
+);
+let finalTextInput = Array.prototype.slice.call(
+  document.querySelectorAll(".final-tester-input")
+);
+
+startTextInput.forEach((input) => {
+  input.addEventListener("keydown", (event) => {
+    const key = event.key;
+    if (key == "Backspace") {
       return;
-    } else if (!isLetter(event.key)) {
+    } else if (!isLetter(key)) {
       event.preventDefault();
     }
-  });
-
-  element.addEventListener("keypress", function (event) {
-    if (isLetter(event.key)) {
+    if (isLetter(key) && input.value.length >= input.maxLength) {
       focusNext();
     }
   });
-}
+});
 
-for (let i = 0; i < finalTextInput.length; i++) {
-  const element = finalTextInput[i];
-  element.addEventListener("keydown", function (event) {
-    if (event.key == "Backspace") {
+baseTextInput.forEach((input) => {
+  input.addEventListener("keydown", (event) => {
+    const key = event.key;
+    if (key == "Backspace" && input.value.length == 0) {
+      focusBack();
+    } else if (key == "Backspace") {
+      return;
+    } else if (!isLetter(key)) {
+      event.preventDefault();
+    }
+    if (isLetter(key) && input.value.length >= input.maxLength) {
+      focusNext();
+    }
+  });
+});
+
+finalTextInput.forEach((input) => {
+  input.addEventListener("keydown", (event) => {
+    const key = event.key;
+    if (key == "Backspace" && input.value.length == 0) {
+      focusBack();
+    } else if (key == "Backspace") {
       return;
     } else if (event.key == "Enter") {
       focusNext();
-    } else if (!isLetter(event.key)) {
+    } else if (!isLetter(key)) {
       event.preventDefault();
     }
   });
-}
+});
