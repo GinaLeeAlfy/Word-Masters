@@ -24,7 +24,7 @@ for (let i = 0; i < baseTextInput.length; i++) {
     }
   });
 
-  element.addEventListener("keyup", function (event) {
+  element.addEventListener("keypress", function (event) {
     if (isLetter(event.key)) {
       focusNext();
     }
@@ -37,7 +37,7 @@ for (let i = 0; i < finalTextInput.length; i++) {
     if (event.key == "Backspace") {
       return;
     } else if (event.key == "Enter") {
-      return;
+      focusNext();
     } else if (!isLetter(event.key)) {
       event.preventDefault();
     }
