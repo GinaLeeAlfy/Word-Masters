@@ -50,3 +50,19 @@ input {
   font-weight: bolder;
   text-transform: capitalize;
 }
+
+.correct {
+  background-color: rgb(19, 87, 19);
+}
+
+.partial {
+  background-color: rgb(207, 177, 25);
+}
+
+.wrong {
+  background-color: rgb(118, 117, 117);
+}
+
+.answered {
+  color: whitesmoke;
+}

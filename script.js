@@ -1,3 +1,16 @@
+let inputs = Array.prototype.slice.call(document.querySelectorAll("input"));
+let startTextInput = Array.prototype.slice.call(
+  document.querySelectorAll(".start-tester-input")
+);
+let baseTextInput = Array.prototype.slice.call(
+  document.querySelectorAll(".base-tester-input")
+);
+let finalTextInput = Array.prototype.slice.call(
+  document.querySelectorAll(".final-tester-input")
+);
+
+let firstGuess = document.querySelectorAll("#firstGuess");
+
 function isLetter(letter) {
   return /^[a-zA-Z]$/.test(letter);
 }
@@ -17,17 +30,6 @@ function focusBack() {
   const input = inputs[nextInputIndex];
   input.focus();
 }
-
-let inputs = Array.prototype.slice.call(document.querySelectorAll("input"));
-let startTextInput = Array.prototype.slice.call(
-  document.querySelectorAll(".start-tester-input")
-);
-let baseTextInput = Array.prototype.slice.call(
-  document.querySelectorAll(".base-tester-input")
-);
-let finalTextInput = Array.prototype.slice.call(
-  document.querySelectorAll(".final-tester-input")
-);
 
 startTextInput.forEach((input) => {
   input.addEventListener("keydown", (event) => {
