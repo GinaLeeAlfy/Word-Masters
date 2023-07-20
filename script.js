@@ -1,6 +1,7 @@
 const WORD_URL = "https://words.dev-apis.com/word-of-the-day";
 
 let wordOfDay = null;
+let guess = "";
 
 let inputs = Array.prototype.slice.call(document.querySelectorAll("input"));
 let startTextInput = Array.prototype.slice.call(
@@ -13,7 +14,27 @@ let finalTextInput = Array.prototype.slice.call(
   document.querySelectorAll(".final-tester-input")
 );
 
-let firstGuess = document.querySelectorAll("#firstGuess");
+let firstGuess = Array.prototype.slice.call(
+  document.getElementById("firstGuess").children
+);
+
+let secondGuess = Array.prototype.slice.call(
+  document.getElementById("secondGuess").children
+);
+let thirdGuess = Array.prototype.slice.call(
+  document.getElementById("thirdGuess").children
+);
+let fourthGuess = Array.prototype.slice.call(
+  document.getElementById("fourthGuess").children
+);
+let fifthGuess = Array.prototype.slice.call(
+  document.getElementById("fifthGuess").children
+);
+let sixthGuess = Array.prototype.slice.call(
+  document.getElementById("sixthGuess").children
+);
+
+let firstGuessValues = [];
 
 function isLetter(letter) {
   return /^[a-zA-Z]$/.test(letter);
@@ -91,3 +112,12 @@ finalTextInput.forEach((input) => {
 });
 
 getWordOfDay();
+
+function grabGuess(whichGuess, whichGuessValues) {
+  whichGuess.forEach((element) => {
+    guess = guess + element.value;
+    whichGuessValues = whichGuess.map((x) => x.value);
+    console.log(guess);
+    return guess;
+  });
+}
