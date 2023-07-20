@@ -1,3 +1,7 @@
+const WORD_URL = "https://words.dev-apis.com/word-of-the-day";
+
+let wordOfDay = null;
+
 let inputs = Array.prototype.slice.call(document.querySelectorAll("input"));
 let startTextInput = Array.prototype.slice.call(
   document.querySelectorAll(".start-tester-input")
@@ -29,6 +33,12 @@ function focusBack() {
   const nextInputIndex = (currInputIndex - 1) % inputs.length;
   const input = inputs[nextInputIndex];
   input.focus();
+}
+
+async function getWordOfDay() {
+  const promise = await fetch(WORD_URL);
+  const processedResponse = await promise.json();
+  wordOfDay = processedResponse.word;
 }
 
 startTextInput.forEach((input) => {
@@ -75,3 +85,5 @@ finalTextInput.forEach((input) => {
     }
   });
 });
+
+getWordOfDay();
