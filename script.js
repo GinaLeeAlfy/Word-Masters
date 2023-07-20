@@ -35,6 +35,8 @@ function focusBack() {
   input.focus();
 }
 
+function checkAnswer() {}
+
 async function getWordOfDay() {
   const promise = await fetch(WORD_URL);
   const processedResponse = await promise.json();
@@ -79,7 +81,9 @@ finalTextInput.forEach((input) => {
     } else if (key == "Backspace") {
       return;
     } else if (event.key == "Enter") {
-      focusNext();
+      if (answer == wordOfDay) {
+        focusNext();
+      }
     } else if (!isLetter(key)) {
       event.preventDefault();
     }
