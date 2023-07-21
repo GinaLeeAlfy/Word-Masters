@@ -46,6 +46,7 @@ let fifthGuessValues = [];
 
 let sixthGuessValues = [];
 let guessValues;
+let lastGuess = false;
 
 function isLetter(letter) {
   return /^[a-zA-Z]$/.test(letter);
@@ -103,6 +104,7 @@ function checkOrder() {
       break;
     case "sixthGuess":
       grabGuess(sixthGuess);
+      lastGuess = true;
       break;
     default:
       console.log(`messed up ${order}`);
@@ -150,8 +152,11 @@ finalTextInput.forEach((input) => {
       return;
     } else if (event.key == "Enter") {
       checkOrder();
+      focusNext();
       if (guess == wordOfDay) {
-        focusNext();
+        alert("You Win!!!");
+      } else if (guess != wordOfDay && lastGuess == true) {
+        alert(`Better luck tomorrow. The answer was ${wordOfDay}.`);
       }
     } else if (!isLetter(key)) {
       event.preventDefault();
