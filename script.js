@@ -36,6 +36,16 @@ let sixthGuess = Array.prototype.slice.call(
 
 let firstGuessValues = [];
 
+let secondGuessValues = [];
+
+let thirdGuessValues = [];
+
+let fourthGuessValues = [];
+
+let fifthGuessValues = [];
+
+let sixthGuessValues = [];
+
 function isLetter(letter) {
   return /^[a-zA-Z]$/.test(letter);
 }
@@ -120,4 +130,30 @@ function grabGuess(whichGuess, whichGuessValues) {
     console.log(guess);
     return guess;
   });
+}
+
+function checkOrder() {
+  let order = document.activeElement.form.id;
+  switch (order) {
+    case "firstGuess":
+      grabGuess(firstGuess, firstGuessValues);
+      break;
+    case "secondGuess":
+      grabGuess(secondGuess, secondGuessValues);
+      break;
+    case "thirdGuess":
+      grabGuess(thirdGuess, thirdGuessValues);
+      break;
+    case "fourthGuess":
+      grabGuess(fourthGuess, fourthGuessValues);
+      break;
+    case "fifthGuess":
+      grabGuess(fifthGuess, fifthGuessValues);
+      break;
+    case "sixthGuess":
+      grabGuess(sixthGuess, sixthGuessValues);
+      break;
+      default:
+        console.log(`messed up ${order}``)
+  }
 }
