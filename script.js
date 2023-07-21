@@ -45,6 +45,7 @@ let fourthGuessValues = [];
 let fifthGuessValues = [];
 
 let sixthGuessValues = [];
+let guessValues;
 
 function isLetter(letter) {
   return /^[a-zA-Z]$/.test(letter);
@@ -73,6 +74,42 @@ async function getWordOfDay() {
   const processedResponse = await promise.json();
   wordOfDay = processedResponse.word;
 }
+
+function grabGuess(whichGuess) {
+  whichGuess.forEach((element) => {
+    guess = guess + element.value;
+    guessValues = whichGuess.map((x) => x.value);
+    return guess, guessValues;
+  });
+}
+
+function checkOrder() {
+  let order = document.activeElement.form.id;
+  switch (order) {
+    case "firstGuess":
+      grabGuess(firstGuess);
+      break;
+    case "secondGuess":
+      grabGuess(secondGuess);
+      break;
+    case "thirdGuess":
+      grabGuess(thirdGuess);
+      break;
+    case "fourthGuess":
+      grabGuess(fourthGuess);
+      break;
+    case "fifthGuess":
+      grabGuess(fifthGuess);
+      break;
+    case "sixthGuess":
+      grabGuess(sixthGuess);
+      break;
+    default:
+      console.log(`messed up ${order}`);
+  }
+}
+
+getWordOfDay();
 
 startTextInput.forEach((input) => {
   input.addEventListener("keydown", (event) => {
@@ -112,7 +149,8 @@ finalTextInput.forEach((input) => {
     } else if (key == "Backspace") {
       return;
     } else if (event.key == "Enter") {
-      if (answer == wordOfDay) {
+      checkOrder();
+      if (guess == wordOfDay) {
         focusNext();
       }
     } else if (!isLetter(key)) {
@@ -120,40 +158,3 @@ finalTextInput.forEach((input) => {
     }
   });
 });
-
-getWordOfDay();
-
-function grabGuess(whichGuess, whichGuessValues) {
-  whichGuess.forEach((element) => {
-    guess = guess + element.value;
-    whichGuessValues = whichGuess.map((x) => x.value);
-    console.log(guess);
-    return guess;
-  });
-}
-
-function checkOrder() {
-  let order = document.activeElement.form.id;
-  switch (order) {
-    case "firstGuess":
-      grabGuess(firstGuess, firstGuessValues);
-      break;
-    case "secondGuess":
-      grabGuess(secondGuess, secondGuessValues);
-      break;
-    case "thirdGuess":
-      grabGuess(thirdGuess, thirdGuessValues);
-      break;
-    case "fourthGuess":
-      grabGuess(fourthGuess, fourthGuessValues);
-      break;
-    case "fifthGuess":
-      grabGuess(fifthGuess, fifthGuessValues);
-      break;
-    case "sixthGuess":
-      grabGuess(sixthGuess, sixthGuessValues);
-      break;
-    default:
-      console.log(`messed up ${order}`);
-  }
-}
