@@ -153,7 +153,7 @@ function checkOrder() {
     case "sixthGuess":
       grabGuess(sixthGuess, sixthGuessValues);
       break;
-      default:
-        console.log(`messed up ${order}``)
+    default:
+      console.log(`messed up ${order}`);
   }
 }
