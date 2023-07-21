@@ -84,25 +84,39 @@ function checkOrder() {
   let order = document.activeElement.form.id;
   switch (order) {
     case "first":
+      secondFieldset.removeAttribute("disabled");
+      focusNext();
       grabGuess(firstGuess);
       firstFieldset.setAttribute("disabled", "");
-      secondFieldset.removeAttribute("disabled");
       break;
     case "second":
+      thirdFieldset.removeAttribute("disabled");
+      focusNext();
       grabGuess(secondGuess);
+      secondFieldset.setAttribute("disabled", "");
       break;
     case "third":
+      fourthFieldset.removeAttribute("disabled");
+      focusNext();
       grabGuess(thirdGuess);
+      thirdFieldset.setAttribute("disabled", "");
       break;
     case "fourth":
+      fifthFieldset.removeAttribute("disabled");
+      focusNext();
       grabGuess(fourthGuess);
+      fourthFieldset.setAttribute("disabled", "");
       break;
     case "fifth":
+      sixthFieldset.removeAttribute("disabled");
+      focusNext();
       grabGuess(fifthGuess);
+      fifthFieldset.setAttribute("disabled", "");
       break;
     case "sixth":
       grabGuess(sixthGuess);
       lastGuess = true;
+      sixthFieldset.setAttribute("disabled", "");
       break;
     default:
       console.log(`messed up ${order}`);
@@ -156,7 +170,6 @@ finalTextInput.forEach((input) => {
         alert(`Better luck tomorrow. The answer was ${wordOfDay}.`);
       } else if (lastGuess != true) {
         guess = "";
-        focusNext();
       }
     } else if (!isLetter(key)) {
       event.preventDefault();
