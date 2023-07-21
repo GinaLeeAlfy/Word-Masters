@@ -152,11 +152,12 @@ finalTextInput.forEach((input) => {
       return;
     } else if (event.key == "Enter") {
       checkOrder();
-      focusNext();
       if (guess == wordOfDay) {
         alert("You Win!!!");
       } else if (guess != wordOfDay && lastGuess == true) {
         alert(`Better luck tomorrow. The answer was ${wordOfDay}.`);
+      } else if (lastGuess != true) {
+        focusNext();
       }
     } else if (!isLetter(key)) {
       event.preventDefault();
