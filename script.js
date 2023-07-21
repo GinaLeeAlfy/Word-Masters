@@ -34,6 +34,13 @@ let sixthGuess = Array.prototype.slice.call(
   document.getElementById("sixthGuess").children
 );
 
+const firstFieldset = document.getElementById("firstGuess");
+const secondFieldset = document.getElementById("secondGuess");
+const thirdFieldset = document.getElementById("thirdGuess");
+const fourthFieldset = document.getElementById("fourthGuess");
+const fifthFieldset = document.getElementById("fifthGuess");
+const sixthFieldset = document.getElementById("sixthGuess");
+
 let guessValues;
 let lastGuess = false;
 
@@ -78,6 +85,8 @@ function checkOrder() {
   switch (order) {
     case "first":
       grabGuess(firstGuess);
+      firstFieldset.setAttribute("disabled", "");
+      secondFieldset.removeAttribute("disabled");
       break;
     case "second":
       grabGuess(secondGuess);
