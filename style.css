@@ -41,6 +41,21 @@ form {
   width: 500px;
 }
 
+fieldset {
+  display: flex;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  padding-block-start: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
+  padding-block-end: 0;
+  gap: 5px;
+  width: 100%;
+  justify-content: space-evenly;
+  min-inline-size: min-content;
+  border: none;
+}
+
 input {
   border: 5px solid gray;
   width: 50px;

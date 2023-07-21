@@ -34,17 +34,6 @@ let sixthGuess = Array.prototype.slice.call(
   document.getElementById("sixthGuess").children
 );
 
-let firstGuessValues = [];
-
-let secondGuessValues = [];
-
-let thirdGuessValues = [];
-
-let fourthGuessValues = [];
-
-let fifthGuessValues = [];
-
-let sixthGuessValues = [];
 let guessValues;
 let lastGuess = false;
 
@@ -87,22 +76,22 @@ function grabGuess(whichGuess) {
 function checkOrder() {
   let order = document.activeElement.form.id;
   switch (order) {
-    case "firstGuess":
+    case "first":
       grabGuess(firstGuess);
       break;
-    case "secondGuess":
+    case "second":
       grabGuess(secondGuess);
       break;
-    case "thirdGuess":
+    case "third":
       grabGuess(thirdGuess);
       break;
-    case "fourthGuess":
+    case "fourth":
       grabGuess(fourthGuess);
       break;
-    case "fifthGuess":
+    case "fifth":
       grabGuess(fifthGuess);
       break;
-    case "sixthGuess":
+    case "sixth":
       grabGuess(sixthGuess);
       lastGuess = true;
       break;
@@ -157,6 +146,7 @@ finalTextInput.forEach((input) => {
       } else if (guess != wordOfDay && lastGuess == true) {
         alert(`Better luck tomorrow. The answer was ${wordOfDay}.`);
       } else if (lastGuess != true) {
+        guess = "";
         focusNext();
       }
     } else if (!isLetter(key)) {
