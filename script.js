@@ -14,23 +14,23 @@ let finalTextInput = Array.prototype.slice.call(
   document.querySelectorAll(".final-tester-input")
 );
 
-let firstGuess = Array.prototype.slice.call(
+let firstGuessInputs = Array.prototype.slice.call(
   document.getElementById("firstGuess").children
 );
 
-let secondGuess = Array.prototype.slice.call(
+let secondGuessInputs = Array.prototype.slice.call(
   document.getElementById("secondGuess").children
 );
-let thirdGuess = Array.prototype.slice.call(
+let thirdGuessInputs = Array.prototype.slice.call(
   document.getElementById("thirdGuess").children
 );
-let fourthGuess = Array.prototype.slice.call(
+let fourthGuessInputs = Array.prototype.slice.call(
   document.getElementById("fourthGuess").children
 );
-let fifthGuess = Array.prototype.slice.call(
+let fifthGuessInputs = Array.prototype.slice.call(
   document.getElementById("fifthGuess").children
 );
-let sixthGuess = Array.prototype.slice.call(
+let sixthGuessInputs = Array.prototype.slice.call(
   document.getElementById("sixthGuess").children
 );
 
@@ -64,8 +64,6 @@ function focusBack() {
   input.focus();
 }
 
-function checkAnswer() {}
-
 async function getWordOfDay() {
   const promise = await fetch(WORD_URL);
   const processedResponse = await promise.json();
@@ -84,43 +82,52 @@ function checkOrder() {
   let order = document.activeElement.form.id;
   switch (order) {
     case "first":
-      secondFieldset.removeAttribute("disabled");
-      focusNext();
-      grabGuess(firstGuess);
-      firstFieldset.setAttribute("disabled", "");
+      movement(secondFieldset, firstFieldset);
       break;
     case "second":
-      thirdFieldset.removeAttribute("disabled");
-      focusNext();
-      grabGuess(secondGuess);
-      secondFieldset.setAttribute("disabled", "");
+      movement(thirdFieldset, secondFieldset);
       break;
     case "third":
-      fourthFieldset.removeAttribute("disabled");
-      focusNext();
-      grabGuess(thirdGuess);
-      thirdFieldset.setAttribute("disabled", "");
+      movement(fourthFieldset, thirdFieldset);
       break;
     case "fourth":
-      fifthFieldset.removeAttribute("disabled");
-      focusNext();
-      grabGuess(fourthGuess);
-      fourthFieldset.setAttribute("disabled", "");
+      movement(fifthFieldset, fourthFieldset);
       break;
     case "fifth":
-      sixthFieldset.removeAttribute("disabled");
-      focusNext();
-      grabGuess(fifthGuess);
-      fifthFieldset.setAttribute("disabled", "");
+      movement(sixthFieldset, fifthFieldset);
       break;
     case "sixth":
-      grabGuess(sixthGuess);
+      grabGuess(sixthGuessInputs);
       lastGuess = true;
+      winConditions();
       sixthFieldset.setAttribute("disabled", "");
       break;
     default:
       console.log(`messed up ${order}`);
   }
+}
+
+function winConditions() {
+  if (guess == wordOfDay) {
+    alert("You Win!!!");
+    return;
+  } else if (guess != wordOfDay && lastGuess == true) {
+    alert(`Better luck tomorrow. The answer was ${wordOfDay}.`);
+  } else if (lastGuess != true) {
+    guess = "";
+    focusNext();
+  }
+}
+
+function movement(nextFieldset, currentFieldset) {
+  nextFieldset.removeAttribute("disabled");
+  grabGuess(firstGuessInputs);
+  winConditions();
+  currentFieldset.setAttribute("disabled", "");
+}
+
+function compareAnswer(guess, answer) {
+  let firstLetter = guess[0] == answer[0];
 }
 
 getWordOfDay();
@@ -164,13 +171,6 @@ finalTextInput.forEach((input) => {
       return;
     } else if (event.key == "Enter") {
       checkOrder();
-      if (guess == wordOfDay) {
-        alert("You Win!!!");
-      } else if (guess != wordOfDay && lastGuess == true) {
-        alert(`Better luck tomorrow. The answer was ${wordOfDay}.`);
-      } else if (lastGuess != true) {
-        guess = "";
-      }
     } else if (!isLetter(key)) {
       event.preventDefault();
     }
