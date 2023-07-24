@@ -2,6 +2,10 @@ const WORD_URL = "https://words.dev-apis.com/word-of-the-day";
 
 let wordOfDay = null;
 let guess = "";
+let guessValues;
+let lastGuess = false;
+let correctArray = [];
+let partialArray = [];
 
 let inputs = Array.prototype.slice.call(document.querySelectorAll("input"));
 let startTextInput = Array.prototype.slice.call(
@@ -41,9 +45,6 @@ const fourthFieldset = document.getElementById("fourthGuess");
 const fifthFieldset = document.getElementById("fifthGuess");
 const sixthFieldset = document.getElementById("sixthGuess");
 
-let guessValues;
-let lastGuess = false;
-
 function isLetter(letter) {
   return /^[a-zA-Z]$/.test(letter);
 }
@@ -82,7 +83,7 @@ function checkOrder() {
   let order = document.activeElement.form.id;
   switch (order) {
     case "first":
-      movement(secondFieldset, firstFieldset);
+      movement(secondFieldset, firstFieldset, firstGuessInputs);
       break;
     case "second":
       movement(thirdFieldset, secondFieldset);
@@ -119,15 +120,36 @@ function winConditions() {
   }
 }
 
-function movement(nextFieldset, currentFieldset) {
+function movement(nextFieldset, currentFieldset, inputArray) {
   nextFieldset.removeAttribute("disabled");
   grabGuess(firstGuessInputs);
+  compareCorrectLetters(guess, wordOfDay);
+  colorCorrectLetters(inputArray, correctArray, partialArray);
   winConditions();
   currentFieldset.setAttribute("disabled", "");
 }
 
-function compareAnswer(guess, answer) {
-  let firstLetter = guess[0] == answer[0];
+function compareCorrectLetters(guess, answer) {
+  for (let index = 0; index < answer.length; index++) {
+    const element = answer[index];
+    correctArray.push(guess[index] == answer[index]);
+    partialArray.push(answer.includes(guess[index]));
+  }
+  console.log(partialArray);
+  return correctArray, partialArray;
+}
+
+function colorCorrectLetters(inputArray, correctArray, partialArray) {
+  for (let index = 0; index < inputArray.length; index++) {
+    const element = inputArray[index];
+    if (correctArray[index] === true) {
+      inputArray[index].classList.add("correct");
+    } else if (partialArray[index] === true) {
+      inputArray[index].classList.add("partial");
+    } else if (correctArray[index] === false) {
+      inputArray[index].classList.add("wrong");
+    }
+  }
 }
 
 getWordOfDay();

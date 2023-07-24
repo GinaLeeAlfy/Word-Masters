@@ -57,7 +57,7 @@ fieldset {
 }
 
 input {
-  border: 5px solid gray;
+  border: 5px solid rgb(187, 187, 187);
   width: 50px;
   height: 50px;
   font-size: xx-large;
@@ -68,16 +68,15 @@ input {
 
 .correct {
   background-color: rgb(19, 87, 19);
+  color: whitesmoke;
 }
 
 .partial {
   background-color: rgb(207, 177, 25);
+  color: whitesmoke;
 }
 
 .wrong {
   background-color: rgb(118, 117, 117);
-}
-
-.answered {
   color: whitesmoke;
 }
