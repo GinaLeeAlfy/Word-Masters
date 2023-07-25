@@ -153,9 +153,6 @@ function compareCorrectLetters(guess, answer) {
       correctArray[index] = true;
       tempAnswer[index] = -1;
       tempGuess[index] = 5;
-      console.log(
-        `new guess ${tempGuess[index]} and tempA ${tempAnswer[index]}`
-      );
     } else {
       correctArray[index] = false;
     }
