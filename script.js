@@ -6,8 +6,7 @@ let guessValues;
 let lastGuess = false;
 let correctArray = [];
 let partialArray = [];
-let repeats = [];
-let wordOfDayRepeats = hasRepeats(wordOfDay);
+let turn = 0;
 
 let inputs = Array.prototype.slice.call(document.querySelectorAll("input"));
 let startTextInput = Array.prototype.slice.call(
@@ -85,23 +84,31 @@ function checkOrder() {
   let order = document.activeElement.form.id;
   switch (order) {
     case "first":
+      turn = 1;
       movement(secondFieldset, firstFieldset, firstGuessInputs);
       break;
     case "second":
-      movement(thirdFieldset, secondFieldset);
+      turn = 2;
+      movement(thirdFieldset, secondFieldset, secondGuessInputs);
       break;
     case "third":
-      movement(fourthFieldset, thirdFieldset);
+      turn = 3;
+      movement(fourthFieldset, thirdFieldset, thirdGuessInputs);
       break;
     case "fourth":
-      movement(fifthFieldset, fourthFieldset);
+      turn = 4;
+      movement(fifthFieldset, fourthFieldset, fourthGuessInputs);
       break;
     case "fifth":
-      movement(sixthFieldset, fifthFieldset);
+      turn = 5;
+      movement(sixthFieldset, fifthFieldset, fifthGuessInputs);
       break;
     case "sixth":
+      turn = 6;
       grabGuess(sixthGuessInputs);
       lastGuess = true;
+      compareCorrectLetters(guess, wordOfDay);
+      colorCorrectLetters(sixthGuessInputs, correctArray, partialArray);
       winConditions();
       sixthFieldset.setAttribute("disabled", "");
       break;
@@ -112,19 +119,25 @@ function checkOrder() {
 
 function winConditions() {
   if (guess == wordOfDay) {
-    alert("You Win!!!");
+    if (turn >= 2) {
+      alert(`Congratulations, you won in ${turn} turns!!`);
+    } else {
+      alert(`Amazing! You won in ${turn} turn!!`);
+    }
     return;
   } else if (guess != wordOfDay && lastGuess == true) {
     alert(`Better luck tomorrow. The answer was ${wordOfDay}.`);
   } else if (lastGuess != true) {
     guess = "";
+    correctArray = [];
+    partialArray = [];
     focusNext();
   }
 }
 
 function movement(nextFieldset, currentFieldset, inputArray) {
   nextFieldset.removeAttribute("disabled");
-  grabGuess(firstGuessInputs);
+  grabGuess(inputArray);
   compareCorrectLetters(guess, wordOfDay);
   colorCorrectLetters(inputArray, correctArray, partialArray);
   winConditions();
@@ -132,25 +145,25 @@ function movement(nextFieldset, currentFieldset, inputArray) {
 }
 
 function compareCorrectLetters(guess, answer) {
-  if (hasRepeats(guess)) {
-    let guessLetters = {};
-    for (const letter of guess) {
-      guessLetters[letter] = guessLetters.hasOwnProperty(letter)
-        ? guessLetters[letter] + 1
-        : 1;
+  let tempAnswer = answer.split("");
+  let tempGuess = guess.split("");
+  for (let index = 0; index < answer.length; index++) {
+    //matches
+    if (tempGuess[index] == tempAnswer[index]) {
+      correctArray[index] = true;
+      tempAnswer[index] = -1;
+      tempGuess[index] = 5;
+      console.log(
+        `new guess ${tempGuess[index]} and tempA ${tempAnswer[index]}`
+      );
+    } else {
+      correctArray[index] = false;
     }
-    for (const letter of guessLetters) {
-      if (guessLetters.hasOwnProperty(letter) && guessLetters[letter] > 1) {
-        repeats.push(letter);
-      }
-    }
-    console.log(guessLetters);
   }
   for (let index = 0; index < answer.length; index++) {
-    const element = answer[index];
-    correctArray.push(guess[index] == answer[index]);
-    if (!hasRepeats(guess)) {
-      partialArray.push(answer.includes(guess[index]));
+    if (tempAnswer.includes(tempGuess[index])) {
+      partialArray[index] = true;
+      tempAnswer[tempAnswer.indexOf(tempGuess[index])] = -1;
     }
   }
   return correctArray, partialArray;
@@ -167,10 +180,6 @@ function colorCorrectLetters(inputArray, correctArray, partialArray) {
       inputArray[index].classList.add("wrong");
     }
   }
-}
-
-function hasRepeats(str) {
-  return /(.).*\1/.test(str);
 }
 
 getWordOfDay();
