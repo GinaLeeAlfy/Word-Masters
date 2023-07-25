@@ -6,6 +6,8 @@ let guessValues;
 let lastGuess = false;
 let correctArray = [];
 let partialArray = [];
+let repeats = [];
+let wordOfDayRepeats = hasRepeats(wordOfDay);
 
 let inputs = Array.prototype.slice.call(document.querySelectorAll("input"));
 let startTextInput = Array.prototype.slice.call(
@@ -130,12 +132,27 @@ function movement(nextFieldset, currentFieldset, inputArray) {
 }
 
 function compareCorrectLetters(guess, answer) {
+  if (hasRepeats(guess)) {
+    let guessLetters = {};
+    for (const letter of guess) {
+      guessLetters[letter] = guessLetters.hasOwnProperty(letter)
+        ? guessLetters[letter] + 1
+        : 1;
+    }
+    for (const letter of guessLetters) {
+      if (guessLetters.hasOwnProperty(letter) && guessLetters[letter] > 1) {
+        repeats.push(letter);
+      }
+    }
+    console.log(guessLetters);
+  }
   for (let index = 0; index < answer.length; index++) {
     const element = answer[index];
     correctArray.push(guess[index] == answer[index]);
-    partialArray.push(answer.includes(guess[index]));
+    if (!hasRepeats(guess)) {
+      partialArray.push(answer.includes(guess[index]));
+    }
   }
-  console.log(partialArray);
   return correctArray, partialArray;
 }
 
@@ -150,6 +167,10 @@ function colorCorrectLetters(inputArray, correctArray, partialArray) {
       inputArray[index].classList.add("wrong");
     }
   }
+}
+
+function hasRepeats(str) {
+  return /(.).*\1/.test(str);
 }
 
 getWordOfDay();
