@@ -80,3 +80,29 @@ input {
   background-color: rgb(118, 117, 117);
   color: whitesmoke;
 }
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spinner {
+  animation: spin 0.5s infinite linear;
+  display: inline-block;
+  font-size: 30px;
+}
+
+@keyframes redFlash {
+  from,
+  to {
+    border-color: rgb(187, 187, 187);
+  }
+  50% {
+    border-color: red;
+  }
+}
+
+.invalid {
+  border-color: red;
+  animation: redFlash 1s ease-in-out 2;
+}

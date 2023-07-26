@@ -1,41 +1,45 @@
 const WORD_URL = "https://words.dev-apis.com/word-of-the-day";
+const VALIDATE_WORD_URL = "https://words.dev-apis.com/validate-word";
 
 let wordOfDay = null;
 let guess = "";
+let isGuessValid = false;
 let guessValues;
 let lastGuess = false;
 let correctArray = [];
 let partialArray = [];
 let turn = 0;
 
-let inputs = Array.prototype.slice.call(document.querySelectorAll("input"));
-let startTextInput = Array.prototype.slice.call(
+const inputs = Array.prototype.slice.call(document.querySelectorAll("input"));
+const startTextInput = Array.prototype.slice.call(
   document.querySelectorAll(".start-tester-input")
 );
-let baseTextInput = Array.prototype.slice.call(
+const baseTextInput = Array.prototype.slice.call(
   document.querySelectorAll(".base-tester-input")
 );
-let finalTextInput = Array.prototype.slice.call(
+const finalTextInput = Array.prototype.slice.call(
   document.querySelectorAll(".final-tester-input")
 );
 
-let firstGuessInputs = Array.prototype.slice.call(
+const spinner = document.querySelector(".spinner");
+
+const firstGuessInputs = Array.prototype.slice.call(
   document.getElementById("firstGuess").children
 );
 
-let secondGuessInputs = Array.prototype.slice.call(
+const secondGuessInputs = Array.prototype.slice.call(
   document.getElementById("secondGuess").children
 );
-let thirdGuessInputs = Array.prototype.slice.call(
+const thirdGuessInputs = Array.prototype.slice.call(
   document.getElementById("thirdGuess").children
 );
-let fourthGuessInputs = Array.prototype.slice.call(
+const fourthGuessInputs = Array.prototype.slice.call(
   document.getElementById("fourthGuess").children
 );
-let fifthGuessInputs = Array.prototype.slice.call(
+const fifthGuessInputs = Array.prototype.slice.call(
   document.getElementById("fifthGuess").children
 );
-let sixthGuessInputs = Array.prototype.slice.call(
+const sixthGuessInputs = Array.prototype.slice.call(
   document.getElementById("sixthGuess").children
 );
 
@@ -80,11 +84,23 @@ function grabGuess(whichGuess) {
   });
 }
 
+async function validateGuess(guess) {
+  const promise = await fetch(VALIDATE_WORD_URL, {
+    method: "POST",
+    body: JSON.stringify({ word: guess }),
+  });
+  const processedResponse = await promise.json();
+  isGuessValid = await processedResponse.validWord;
+  console.log(isGuessValid);
+}
+
 function checkOrder() {
   let order = document.activeElement.form.id;
   switch (order) {
     case "first":
       turn = 1;
+      grabGuess(firstGuessInputs);
+      validateGuess(guess);
       movement(secondFieldset, firstFieldset, firstGuessInputs);
       break;
     case "second":
@@ -136,12 +152,20 @@ function winConditions() {
 }
 
 function movement(nextFieldset, currentFieldset, inputArray) {
-  nextFieldset.removeAttribute("disabled");
-  grabGuess(inputArray);
-  compareCorrectLetters(guess, wordOfDay);
-  colorCorrectLetters(inputArray, correctArray, partialArray);
-  winConditions();
-  currentFieldset.setAttribute("disabled", "");
+  // grabGuess(inputArray);
+  // validateGuess(guess);
+  console.log(`is guess valid now? ${isGuessValid}`);
+  if (isGuessValid) {
+    nextFieldset.removeAttribute("disabled");
+    compareCorrectLetters(guess, wordOfDay);
+    colorCorrectLetters(inputArray, correctArray, partialArray);
+    winConditions();
+    currentFieldset.setAttribute("disabled", "");
+  } else {
+    inputArray.forEach((input) => {
+      input.classList.add("invalid");
+    });
+  }
 }
 
 function compareCorrectLetters(guess, answer) {
@@ -220,6 +244,9 @@ finalTextInput.forEach((input) => {
       return;
     } else if (event.key == "Enter") {
       checkOrder();
+      // if ((wordOfDay = null)) {
+      //   spinner.innerHTML = "🌀";
+      // }
     } else if (!isLetter(key)) {
       event.preventDefault();
     }
