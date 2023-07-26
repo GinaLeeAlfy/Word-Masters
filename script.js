@@ -3,7 +3,7 @@ const VALIDATE_WORD_URL = "https://words.dev-apis.com/validate-word";
 
 let wordOfDay = null;
 let guess = "";
-let isGuessValid = false;
+let isGuessValid = Promise;
 let guessValues;
 let lastGuess = false;
 let correctArray = [];
@@ -92,6 +92,7 @@ async function validateGuess(guess) {
   const processedResponse = await promise.json();
   isGuessValid = await processedResponse.validWord;
   console.log(isGuessValid);
+  return await isGuessValid;
 }
 
 function checkOrder() {
@@ -155,7 +156,8 @@ function movement(nextFieldset, currentFieldset, inputArray) {
   // grabGuess(inputArray);
   // validateGuess(guess);
   console.log(`is guess valid now? ${isGuessValid}`);
-  if (isGuessValid) {
+  if (isGuessValid == true) {
+    console.log(guess);
     nextFieldset.removeAttribute("disabled");
     compareCorrectLetters(guess, wordOfDay);
     colorCorrectLetters(inputArray, correctArray, partialArray);
@@ -165,10 +167,12 @@ function movement(nextFieldset, currentFieldset, inputArray) {
     inputArray.forEach((input) => {
       input.classList.add("invalid");
     });
+    guess = "";
   }
 }
 
 function compareCorrectLetters(guess, answer) {
+  console.log(`guess: ${guess} answer: ${answer}`);
   let tempAnswer = answer.split("");
   let tempGuess = guess.split("");
   for (let index = 0; index < answer.length; index++) {
