@@ -22,6 +22,7 @@ const finalTextInput = Array.prototype.slice.call(
 );
 
 const spinner = document.querySelector(".spinner");
+const header = document.querySelector("h1");
 
 const firstGuessInputs = Array.prototype.slice.call(
   document.getElementById("firstGuess").children
@@ -139,6 +140,7 @@ function checkOrder() {
 
 function winConditions() {
   if (guess == wordOfDay) {
+    header.classList.add("rainbow");
     if (turn >= 2) {
       alert(`Congratulations, you won in ${turn} turns!!`);
     } else {
@@ -172,12 +174,10 @@ function movement(nextFieldset, currentFieldset, inputArray) {
   } else if (isGuessValid == false) {
     inputArray.forEach((input) => {
       input.classList.add("invalid");
-      console.log("added");
     });
     setTimeout(() => {
       inputArray.forEach((input) => {
         input.classList.remove("invalid");
-        console.log("removed");
       });
     }, 1000);
     guess = "";
@@ -187,7 +187,6 @@ function movement(nextFieldset, currentFieldset, inputArray) {
 }
 
 function compareCorrectLetters(guess, answer) {
-  console.log(`guess: ${guess} answer: ${answer}`);
   let tempAnswer = answer.split("");
   let tempGuess = guess.split("");
   for (let index = 0; index < answer.length; index++) {
