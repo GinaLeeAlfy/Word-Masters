@@ -84,15 +84,19 @@ function grabGuess(whichGuess) {
   });
 }
 
-async function validateGuess(guess) {
+async function validateGuess(guess, nextFieldset, currentFieldset, inputArray) {
+  spinner.innerHTML = "🌀";
   const promise = await fetch(VALIDATE_WORD_URL, {
     method: "POST",
     body: JSON.stringify({ word: guess }),
   });
   const processedResponse = await promise.json();
   isGuessValid = await processedResponse.validWord;
-  console.log(isGuessValid);
-  return await isGuessValid;
+  spinner.innerHTML = "";
+  if (turn == 6 && isGuessValid == true) {
+    lastGuess = true;
+  }
+  movement(nextFieldset, currentFieldset, inputArray);
 }
 
 function checkOrder() {
@@ -101,33 +105,32 @@ function checkOrder() {
     case "first":
       turn = 1;
       grabGuess(firstGuessInputs);
-      validateGuess(guess);
-      movement(secondFieldset, firstFieldset, firstGuessInputs);
+      validateGuess(guess, secondFieldset, firstFieldset, firstGuessInputs);
       break;
     case "second":
       turn = 2;
-      movement(thirdFieldset, secondFieldset, secondGuessInputs);
+      grabGuess(secondGuessInputs);
+      validateGuess(guess, thirdFieldset, secondFieldset, secondGuessInputs);
       break;
     case "third":
       turn = 3;
-      movement(fourthFieldset, thirdFieldset, thirdGuessInputs);
+      grabGuess(thirdGuessInputs);
+      validateGuess(guess, fourthFieldset, thirdFieldset, thirdGuessInputs);
       break;
     case "fourth":
       turn = 4;
-      movement(fifthFieldset, fourthFieldset, fourthGuessInputs);
+      grabGuess(fourthGuessInputs);
+      validateGuess(guess, fifthFieldset, fourthFieldset, fourthGuessInputs);
       break;
     case "fifth":
       turn = 5;
-      movement(sixthFieldset, fifthFieldset, fifthGuessInputs);
+      grabGuess(fifthGuessInputs);
+      validateGuess(guess, sixthFieldset, fifthFieldset, fifthGuessInputs);
       break;
     case "sixth":
       turn = 6;
       grabGuess(sixthGuessInputs);
-      lastGuess = true;
-      compareCorrectLetters(guess, wordOfDay);
-      colorCorrectLetters(sixthGuessInputs, correctArray, partialArray);
-      winConditions();
-      sixthFieldset.setAttribute("disabled", "");
+      validateGuess(guess, null, sixthFieldset, sixthGuessInputs);
       break;
     default:
       console.log(`messed up ${order}`);
@@ -153,21 +156,33 @@ function winConditions() {
 }
 
 function movement(nextFieldset, currentFieldset, inputArray) {
-  // grabGuess(inputArray);
-  // validateGuess(guess);
-  console.log(`is guess valid now? ${isGuessValid}`);
   if (isGuessValid == true) {
-    console.log(guess);
-    nextFieldset.removeAttribute("disabled");
-    compareCorrectLetters(guess, wordOfDay);
-    colorCorrectLetters(inputArray, correctArray, partialArray);
-    winConditions();
-    currentFieldset.setAttribute("disabled", "");
-  } else {
+    if (lastGuess == false) {
+      nextFieldset.removeAttribute("disabled");
+      compareCorrectLetters(guess, wordOfDay);
+      colorCorrectLetters(inputArray, correctArray, partialArray);
+      winConditions();
+      currentFieldset.setAttribute("disabled", "");
+    } else {
+      compareCorrectLetters(guess, wordOfDay);
+      colorCorrectLetters(inputArray, correctArray, partialArray);
+      winConditions();
+      currentFieldset.setAttribute("disabled", "");
+    }
+  } else if (isGuessValid == false) {
     inputArray.forEach((input) => {
       input.classList.add("invalid");
+      console.log("added");
     });
+    setTimeout(() => {
+      inputArray.forEach((input) => {
+        input.classList.remove("invalid");
+        console.log("removed");
+      });
+    }, 1000);
     guess = "";
+    correctArray = [];
+    partialArray = [];
   }
 }
 
@@ -247,10 +262,9 @@ finalTextInput.forEach((input) => {
     } else if (key == "Backspace") {
       return;
     } else if (event.key == "Enter") {
+      correctArray = [];
+      partialArray = [];
       checkOrder();
-      // if ((wordOfDay = null)) {
-      //   spinner.innerHTML = "🌀";
-      // }
     } else if (!isLetter(key)) {
       event.preventDefault();
     }
