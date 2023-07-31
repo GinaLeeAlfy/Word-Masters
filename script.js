@@ -226,9 +226,8 @@ getWordOfDay();
 startTextInput.forEach((input) => {
   input.addEventListener("keydown", (event) => {
     const key = event.key;
-    if (key == "Backspace") {
-      return;
-    } else if (key == "Tab") {
+    console.log(key);
+    if (key == "Backspace" || key == "Tab") {
       return;
     } else if (!isLetter(key)) {
       event.preventDefault();
@@ -244,9 +243,7 @@ baseTextInput.forEach((input) => {
     const key = event.key;
     if (key == "Backspace" && input.value.length == 0) {
       focusBack();
-    } else if (key == "Backspace") {
-      return;
-    } else if (key == "Tab") {
+    } else if (key == "Backspace" || key == "Tab") {
       return;
     } else if (!isLetter(key)) {
       event.preventDefault();
@@ -262,9 +259,7 @@ finalTextInput.forEach((input) => {
     const key = event.key;
     if (key == "Backspace" && input.value.length == 0) {
       focusBack();
-    } else if (key == "Backspace") {
-      return;
-    } else if (key == "Tab") {
+    } else if (key == "Backspace" || key == "Tab") {
       return;
     } else if (event.key == "Enter") {
       correctArray = [];
