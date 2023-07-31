@@ -264,6 +264,8 @@ finalTextInput.forEach((input) => {
       correctArray = [];
       partialArray = [];
       checkOrder();
+    } else if (isLetter(key) && input.value.length == 1) {
+      input.value = key;
     } else if (!isLetter(key)) {
       event.preventDefault();
     }
