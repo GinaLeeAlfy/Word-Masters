@@ -228,6 +228,8 @@ startTextInput.forEach((input) => {
     const key = event.key;
     if (key == "Backspace") {
       return;
+    } else if (key == "Tab") {
+      return;
     } else if (!isLetter(key)) {
       event.preventDefault();
     }
@@ -244,6 +246,8 @@ baseTextInput.forEach((input) => {
       focusBack();
     } else if (key == "Backspace") {
       return;
+    } else if (key == "Tab") {
+      return;
     } else if (!isLetter(key)) {
       event.preventDefault();
     }
@@ -259,6 +263,8 @@ finalTextInput.forEach((input) => {
     if (key == "Backspace" && input.value.length == 0) {
       focusBack();
     } else if (key == "Backspace") {
+      return;
+    } else if (key == "Tab") {
       return;
     } else if (event.key == "Enter") {
       correctArray = [];
