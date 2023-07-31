@@ -69,6 +69,7 @@ function focusBack() {
   const nextInputIndex = (currInputIndex - 1) % inputs.length;
   const input = inputs[nextInputIndex];
   input.focus();
+  input.setSelectionRange(input.value.length, input.value.length);
 }
 
 async function getWordOfDay() {
@@ -229,6 +230,8 @@ startTextInput.forEach((input) => {
     console.log(key);
     if (key == "Backspace" || key == "Tab") {
       return;
+    } else if (key == "ArrowRight") {
+      focusNext();
     } else if (!isLetter(key)) {
       event.preventDefault();
     }
@@ -241,10 +244,12 @@ startTextInput.forEach((input) => {
 baseTextInput.forEach((input) => {
   input.addEventListener("keydown", (event) => {
     const key = event.key;
-    if (key == "Backspace" && input.value.length == 0) {
+    if ((key == "Backspace" && input.value.length == 0) || key == "ArrowLeft") {
       focusBack();
     } else if (key == "Backspace" || key == "Tab") {
       return;
+    } else if (key == "ArrowRight") {
+      focusNext();
     } else if (!isLetter(key)) {
       event.preventDefault();
     }
@@ -257,15 +262,17 @@ baseTextInput.forEach((input) => {
 finalTextInput.forEach((input) => {
   input.addEventListener("keydown", (event) => {
     const key = event.key;
-    if (key == "Backspace" && input.value.length == 0) {
+    if ((key == "Backspace" && input.value.length == 0) || key == "ArrowLeft") {
       focusBack();
     } else if (key == "Backspace" || key == "Tab") {
       return;
+    } else if (key == "ArrowRight") {
+      focusNext();
     } else if (event.key == "Enter") {
       correctArray = [];
       partialArray = [];
       checkOrder();
-    } else if (isLetter(key) && input.value.length == 1) {
+    } else if (isLetter(key) && input.value.length == input.maxLength) {
       input.value = key;
     } else if (!isLetter(key)) {
       event.preventDefault();
