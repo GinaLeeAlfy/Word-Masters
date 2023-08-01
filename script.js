@@ -89,44 +89,6 @@ async function validateGuess(guess) {
   setLoading(false);
 }
 
-function checkOrder() {
-  let order = document.activeElement.form.id;
-  switch (order) {
-    case "first":
-      turn = 1;
-      grabGuess();
-      validateGuess(guess);
-      break;
-    case "second":
-      turn = 2;
-      grabGuess();
-      validateGuess(guess);
-      break;
-    case "third":
-      turn = 3;
-      grabGuess();
-      validateGuess(guess);
-      break;
-    case "fourth":
-      turn = 4;
-      grabGuess();
-      validateGuess(guess);
-      break;
-    case "fifth":
-      turn = 5;
-      grabGuess();
-      validateGuess(guess);
-      break;
-    case "sixth":
-      turn = 6;
-      grabGuess();
-      validateGuess(guess);
-      break;
-    default:
-      console.log(`messed up ${order}`);
-  }
-}
-
 function winConditions() {
   if (guess == wordOfDay) {
     header.classList.add("rainbow");
@@ -157,6 +119,7 @@ function movement() {
       fieldsets[currentRow].setAttribute("disabled", "");
     }
     currentRow++;
+    turn++;
   } else if (isGuessValid == false) {
     let currentInputs = inputs.slice(
       currentRow * ANSWER_LENGTH,
@@ -245,7 +208,8 @@ finalTextInput.forEach((input) => {
     } else if (key == "ArrowRight") {
       focusNext();
     } else if (event.key == "Enter") {
-      checkOrder();
+      grabGuess();
+      validateGuess(guess);
     } else if (isLetter(key) && input.value.length == input.maxLength) {
       input.value = key;
     } else if (!isLetter(key)) {
