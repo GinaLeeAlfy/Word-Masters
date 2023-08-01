@@ -8,9 +8,7 @@ let processingGuess = "";
 let isGuessValid = Promise;
 let guessValues;
 let lastGuess = false;
-let correctArray = [];
-let partialArray = [];
-let turn = 0;
+let turn = 1;
 let currentRow = 0;
 
 const inputs = Array.prototype.slice.call(document.querySelectorAll("input"));
@@ -26,27 +24,6 @@ const finalTextInput = Array.prototype.slice.call(
 
 const spinner = document.querySelector(".loading-bar");
 const header = document.querySelector("h1");
-
-const firstGuessInputs = Array.prototype.slice.call(
-  document.getElementById("firstGuess").children
-);
-
-const secondGuessInputs = Array.prototype.slice.call(
-  document.getElementById("secondGuess").children
-);
-const thirdGuessInputs = Array.prototype.slice.call(
-  document.getElementById("thirdGuess").children
-);
-const fourthGuessInputs = Array.prototype.slice.call(
-  document.getElementById("fourthGuess").children
-);
-const fifthGuessInputs = Array.prototype.slice.call(
-  document.getElementById("fifthGuess").children
-);
-const sixthGuessInputs = Array.prototype.slice.call(
-  document.getElementById("sixthGuess").children
-);
-
 const fieldsets = Array.prototype.slice.call(
   document.querySelectorAll("fieldset")
 );
@@ -85,15 +62,19 @@ async function getWordOfDay() {
   setLoading(false);
 }
 
-function grabGuess(whichGuess) {
-  whichGuess.forEach((element) => {
+function grabGuess() {
+  let currentInputs = inputs.slice(
+    currentRow * ANSWER_LENGTH,
+    currentRow * ANSWER_LENGTH + ANSWER_LENGTH
+  );
+  currentInputs.forEach((element) => {
     guess = guess + element.value;
   });
   guess = guess.toLowerCase();
   return guess;
 }
 
-async function validateGuess(guess, inputArray) {
+async function validateGuess(guess) {
   setLoading(true);
   const promise = await fetch(VALIDATE_WORD_URL, {
     method: "POST",
@@ -104,7 +85,7 @@ async function validateGuess(guess, inputArray) {
   if (turn == 6 && isGuessValid == true) {
     lastGuess = true;
   }
-  movement(inputArray);
+  movement();
   setLoading(false);
 }
 
@@ -113,33 +94,33 @@ function checkOrder() {
   switch (order) {
     case "first":
       turn = 1;
-      grabGuess(firstGuessInputs);
-      validateGuess(guess, firstGuessInputs);
+      grabGuess();
+      validateGuess(guess);
       break;
     case "second":
       turn = 2;
-      grabGuess(secondGuessInputs);
-      validateGuess(guess, secondGuessInputs);
+      grabGuess();
+      validateGuess(guess);
       break;
     case "third":
       turn = 3;
-      grabGuess(thirdGuessInputs);
-      validateGuess(guess, thirdGuessInputs);
+      grabGuess();
+      validateGuess(guess);
       break;
     case "fourth":
       turn = 4;
-      grabGuess(fourthGuessInputs);
-      validateGuess(guess, fourthGuessInputs);
+      grabGuess();
+      validateGuess(guess);
       break;
     case "fifth":
       turn = 5;
-      grabGuess(fifthGuessInputs);
-      validateGuess(guess, fifthGuessInputs);
+      grabGuess();
+      validateGuess(guess);
       break;
     case "sixth":
       turn = 6;
-      grabGuess(sixthGuessInputs);
-      validateGuess(guess, sixthGuessInputs);
+      grabGuess();
+      validateGuess(guess);
       break;
     default:
       console.log(`messed up ${order}`);
@@ -159,13 +140,11 @@ function winConditions() {
     alert(`Better luck tomorrow. The answer was ${wordOfDay}.`);
   } else if (lastGuess != true) {
     guess = "";
-    correctArray = [];
-    partialArray = [];
     focusNext();
   }
 }
 
-function movement(inputArray) {
+function movement() {
   if (isGuessValid == true) {
     if (lastGuess == false) {
       fieldsets[currentRow + 1].removeAttribute("disabled");
@@ -179,17 +158,19 @@ function movement(inputArray) {
     }
     currentRow++;
   } else if (isGuessValid == false) {
-    inputArray.forEach((input) => {
+    let currentInputs = inputs.slice(
+      currentRow * ANSWER_LENGTH,
+      currentRow * ANSWER_LENGTH + ANSWER_LENGTH
+    );
+    currentInputs.forEach((input) => {
       input.classList.add("invalid");
     });
     setTimeout(() => {
-      inputArray.forEach((input) => {
+      currentInputs.forEach((input) => {
         input.classList.remove("invalid");
       });
     }, 1000);
     guess = "";
-    correctArray = [];
-    partialArray = [];
   }
 }
 
@@ -264,8 +245,6 @@ finalTextInput.forEach((input) => {
     } else if (key == "ArrowRight") {
       focusNext();
     } else if (event.key == "Enter") {
-      correctArray = [];
-      partialArray = [];
       checkOrder();
     } else if (isLetter(key) && input.value.length == input.maxLength) {
       input.value = key;
