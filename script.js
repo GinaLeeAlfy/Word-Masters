@@ -3,6 +3,7 @@ const VALIDATE_WORD_URL = "https://words.dev-apis.com/validate-word";
 
 let wordOfDay = null;
 let guess = "";
+let processingGuess = "";
 let isGuessValid = Promise;
 let guessValues;
 let lastGuess = false;
@@ -55,12 +56,15 @@ function isLetter(letter) {
   return /^[a-zA-Z]$/.test(letter);
 }
 
-function focusNext() {
+function focusNext(key) {
   const currInput = document.activeElement;
   const currInputIndex = inputs.indexOf(currInput);
   const nextInputIndex = (currInputIndex + 1) % inputs.length;
   const input = inputs[nextInputIndex];
   input.focus();
+  if (isLetter(key)) {
+    input.value = key;
+  }
 }
 
 function focusBack() {
@@ -69,7 +73,10 @@ function focusBack() {
   const nextInputIndex = (currInputIndex - 1) % inputs.length;
   const input = inputs[nextInputIndex];
   input.focus();
-  input.setSelectionRange(input.value.length, input.value.length);
+  //put cursor at end of input
+  setTimeout(function () {
+    input.selectionStart = input.selectionEnd = 10000;
+  }, 0);
 }
 
 async function getWordOfDay() {
@@ -81,9 +88,9 @@ async function getWordOfDay() {
 function grabGuess(whichGuess) {
   whichGuess.forEach((element) => {
     guess = guess + element.value;
-    guessValues = whichGuess.map((x) => x.value);
-    return guess, guessValues;
   });
+  guess = guess.toLowerCase();
+  return guess;
 }
 
 async function validateGuess(guess, nextFieldset, currentFieldset, inputArray) {
@@ -227,7 +234,6 @@ getWordOfDay();
 startTextInput.forEach((input) => {
   input.addEventListener("keydown", (event) => {
     const key = event.key;
-    console.log(key);
     if (key == "Backspace" || key == "Tab") {
       return;
     } else if (key == "ArrowRight") {
@@ -236,7 +242,7 @@ startTextInput.forEach((input) => {
       event.preventDefault();
     }
     if (isLetter(key) && input.value.length >= input.maxLength) {
-      focusNext();
+      focusNext(key);
     }
   });
 });
@@ -254,7 +260,7 @@ baseTextInput.forEach((input) => {
       event.preventDefault();
     }
     if (isLetter(key) && input.value.length >= input.maxLength) {
-      focusNext();
+      focusNext(key);
     }
   });
 });
