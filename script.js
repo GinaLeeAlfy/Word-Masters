@@ -4,9 +4,7 @@ const ANSWER_LENGTH = 5;
 
 let wordOfDay = null;
 let guess = "";
-let processingGuess = "";
 let isGuessValid = Promise;
-let guessValues;
 let lastGuess = false;
 let turn = 1;
 let currentRow = 0;
