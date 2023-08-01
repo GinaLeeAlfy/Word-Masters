@@ -205,7 +205,7 @@ finalTextInput.forEach((input) => {
       return;
     } else if (key == "ArrowRight") {
       focusNext();
-    } else if (event.key == "Enter") {
+    } else if (event.key == "Enter" && wordOfDay != null) {
       grabGuess();
       validateGuess(guess);
     } else if (isLetter(key) && input.value.length == input.maxLength) {
