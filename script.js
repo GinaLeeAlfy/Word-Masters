@@ -10,6 +10,7 @@ let lastGuess = false;
 let correctArray = [];
 let partialArray = [];
 let turn = 0;
+let currentRow = 0;
 
 const inputs = Array.prototype.slice.call(document.querySelectorAll("input"));
 const startTextInput = Array.prototype.slice.call(
@@ -22,7 +23,7 @@ const finalTextInput = Array.prototype.slice.call(
   document.querySelectorAll(".final-tester-input")
 );
 
-const spinner = document.querySelector(".spinner");
+const spinner = document.querySelector(".loading-bar");
 const header = document.querySelector("h1");
 
 const firstGuessInputs = Array.prototype.slice.call(
@@ -83,6 +84,7 @@ async function getWordOfDay() {
   const promise = await fetch(WORD_URL);
   const processedResponse = await promise.json();
   wordOfDay = processedResponse.word;
+  setLoading(false);
 }
 
 function grabGuess(whichGuess) {
@@ -94,18 +96,18 @@ function grabGuess(whichGuess) {
 }
 
 async function validateGuess(guess, nextFieldset, currentFieldset, inputArray) {
-  spinner.innerHTML = "🌀";
+  setLoading(true);
   const promise = await fetch(VALIDATE_WORD_URL, {
     method: "POST",
     body: JSON.stringify({ word: guess }),
   });
   const processedResponse = await promise.json();
   isGuessValid = await processedResponse.validWord;
-  spinner.innerHTML = "";
   if (turn == 6 && isGuessValid == true) {
     lastGuess = true;
   }
   movement(nextFieldset, currentFieldset, inputArray);
+  setLoading(false);
 }
 
 function checkOrder() {
@@ -179,6 +181,7 @@ function movement(nextFieldset, currentFieldset, inputArray) {
       winConditions();
       currentFieldset.setAttribute("disabled", "");
     }
+    currentRow++;
   } else if (isGuessValid == false) {
     inputArray.forEach((input) => {
       input.classList.add("invalid");
@@ -227,6 +230,10 @@ function colorCorrectLetters(inputArray, correctArray, partialArray) {
       inputArray[index].classList.add("wrong");
     }
   }
+}
+
+function setLoading(isLoading) {
+  spinner.classList.toggle("show", isLoading);
 }
 
 getWordOfDay();

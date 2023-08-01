@@ -92,6 +92,14 @@ input {
   font-size: 30px;
 }
 
+.loading-bar {
+  visibility: hidden;
+}
+
+.show {
+  visibility: visible;
+}
+
 @keyframes redFlash {
   from,
   to {
