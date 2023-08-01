@@ -71,13 +71,13 @@ input {
   color: whitesmoke;
 }
 
-.partial {
-  background-color: rgb(207, 177, 25);
+.wrong {
+  background-color: rgb(118, 117, 117);
   color: whitesmoke;
 }
 
-.wrong {
-  background-color: rgb(118, 117, 117);
+.partial {
+  background-color: rgb(207, 177, 25);
   color: whitesmoke;
 }
 

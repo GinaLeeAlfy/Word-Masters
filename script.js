@@ -1,5 +1,6 @@
 const WORD_URL = "https://words.dev-apis.com/word-of-the-day";
 const VALIDATE_WORD_URL = "https://words.dev-apis.com/validate-word";
+const ANSWER_LENGTH = 5;
 
 let wordOfDay = null;
 let guess = "";
@@ -46,12 +47,9 @@ const sixthGuessInputs = Array.prototype.slice.call(
   document.getElementById("sixthGuess").children
 );
 
-const firstFieldset = document.getElementById("firstGuess");
-const secondFieldset = document.getElementById("secondGuess");
-const thirdFieldset = document.getElementById("thirdGuess");
-const fourthFieldset = document.getElementById("fourthGuess");
-const fifthFieldset = document.getElementById("fifthGuess");
-const sixthFieldset = document.getElementById("sixthGuess");
+const fieldsets = Array.prototype.slice.call(
+  document.querySelectorAll("fieldset")
+);
 
 function isLetter(letter) {
   return /^[a-zA-Z]$/.test(letter);
@@ -95,7 +93,7 @@ function grabGuess(whichGuess) {
   return guess;
 }
 
-async function validateGuess(guess, nextFieldset, currentFieldset, inputArray) {
+async function validateGuess(guess, inputArray) {
   setLoading(true);
   const promise = await fetch(VALIDATE_WORD_URL, {
     method: "POST",
@@ -106,7 +104,7 @@ async function validateGuess(guess, nextFieldset, currentFieldset, inputArray) {
   if (turn == 6 && isGuessValid == true) {
     lastGuess = true;
   }
-  movement(nextFieldset, currentFieldset, inputArray);
+  movement(inputArray);
   setLoading(false);
 }
 
@@ -116,32 +114,32 @@ function checkOrder() {
     case "first":
       turn = 1;
       grabGuess(firstGuessInputs);
-      validateGuess(guess, secondFieldset, firstFieldset, firstGuessInputs);
+      validateGuess(guess, firstGuessInputs);
       break;
     case "second":
       turn = 2;
       grabGuess(secondGuessInputs);
-      validateGuess(guess, thirdFieldset, secondFieldset, secondGuessInputs);
+      validateGuess(guess, secondGuessInputs);
       break;
     case "third":
       turn = 3;
       grabGuess(thirdGuessInputs);
-      validateGuess(guess, fourthFieldset, thirdFieldset, thirdGuessInputs);
+      validateGuess(guess, thirdGuessInputs);
       break;
     case "fourth":
       turn = 4;
       grabGuess(fourthGuessInputs);
-      validateGuess(guess, fifthFieldset, fourthFieldset, fourthGuessInputs);
+      validateGuess(guess, fourthGuessInputs);
       break;
     case "fifth":
       turn = 5;
       grabGuess(fifthGuessInputs);
-      validateGuess(guess, sixthFieldset, fifthFieldset, fifthGuessInputs);
+      validateGuess(guess, fifthGuessInputs);
       break;
     case "sixth":
       turn = 6;
       grabGuess(sixthGuessInputs);
-      validateGuess(guess, null, sixthFieldset, sixthGuessInputs);
+      validateGuess(guess, sixthGuessInputs);
       break;
     default:
       console.log(`messed up ${order}`);
@@ -167,19 +165,17 @@ function winConditions() {
   }
 }
 
-function movement(nextFieldset, currentFieldset, inputArray) {
+function movement(inputArray) {
   if (isGuessValid == true) {
     if (lastGuess == false) {
-      nextFieldset.removeAttribute("disabled");
+      fieldsets[currentRow + 1].removeAttribute("disabled");
       compareCorrectLetters(guess, wordOfDay);
-      colorCorrectLetters(inputArray, correctArray, partialArray);
       winConditions();
-      currentFieldset.setAttribute("disabled", "");
+      fieldsets[currentRow].setAttribute("disabled", "");
     } else {
       compareCorrectLetters(guess, wordOfDay);
-      colorCorrectLetters(inputArray, correctArray, partialArray);
       winConditions();
-      currentFieldset.setAttribute("disabled", "");
+      fieldsets[currentRow].setAttribute("disabled", "");
     }
     currentRow++;
   } else if (isGuessValid == false) {
@@ -203,31 +199,17 @@ function compareCorrectLetters(guess, answer) {
   for (let index = 0; index < answer.length; index++) {
     //matches
     if (tempGuess[index] == tempAnswer[index]) {
-      correctArray[index] = true;
+      inputs[currentRow * ANSWER_LENGTH + index].classList.add("correct");
       tempAnswer[index] = -1;
       tempGuess[index] = 5;
     } else {
-      correctArray[index] = false;
+      inputs[currentRow * ANSWER_LENGTH + index].classList.add("wrong");
     }
   }
   for (let index = 0; index < answer.length; index++) {
     if (tempAnswer.includes(tempGuess[index])) {
-      partialArray[index] = true;
+      inputs[currentRow * ANSWER_LENGTH + index].classList.add("partial");
       tempAnswer[tempAnswer.indexOf(tempGuess[index])] = -1;
-    }
-  }
-  return correctArray, partialArray;
-}
-
-function colorCorrectLetters(inputArray, correctArray, partialArray) {
-  for (let index = 0; index < inputArray.length; index++) {
-    const element = inputArray[index];
-    if (correctArray[index] === true) {
-      inputArray[index].classList.add("correct");
-    } else if (partialArray[index] === true) {
-      inputArray[index].classList.add("partial");
-    } else if (correctArray[index] === false) {
-      inputArray[index].classList.add("wrong");
     }
   }
 }
